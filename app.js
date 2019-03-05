@@ -1,5 +1,4 @@
-const PDFDocument = require('pdfkit');
-const text = 'Что такое Lorem Ipsum?\n' +
+const lorem = 'Что такое Lorem Ipsum?\n' +
     'Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной ' +
     '"рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию ' +
     'размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без' +
@@ -16,35 +15,41 @@ const text = 'Что такое Lorem Ipsum?\n' +
     ' дожидаются своего настоящего рождения. За прошедшие годы текст Lorem Ipsum получил много версий. Некоторые' +
     ' версии появились по ошибке, некоторые - намеренно (например, юмористические варианты).';
 // Create a document
+const PDFDocument = require('pdfkit');
 const doc = new PDFDocument;
 const fs = require('fs');
 
 // Pipe its output somewhere, like to a file or HTTP response
 // See below for browser usage
-doc.pipe(fs.createWriteStream('output.pdf'));
+doc.pipe(fs.createWriteStream(`${Date.now()}.pdf`));
 
-// Embed a font, set the font size, and render some text
+// Вибираємо шрифт, який качаємо ззоввні, ставимо розмір, там вже пишемо сам текст
 doc.font('./sans.ttf')
-    .fontSize(25)
-    .text(text, 100, 100);
+    .fontSize(15)
+    // 100 - відступ зліва. 10 - відступ зверху
+    .text(lorem, 100, 10);
 
 // Add an image, constrain it to a given size, and center it vertically and horizontally
-doc.image('./trex.png', {
-    fit: [250, 300],
-    align: 'center',
-    valign: 'center'
-});
-
-// Add another page
 doc.addPage()
+    .image('./trex.png', {
+        fit: [250, 300],
+        align: 'left',
+        valign: 'center'
+    });
+
+// Додаємо норву пейджу, з новим текстом
+// Що б текст був замальований потрібно спочатку вказати full, a тоді текст
+doc.addPage()
+    .fillColor('#097711')
     .fontSize(25)
     .text('Here is some vector graphics...', 100, 100);
 
-// Draw a triangle
+// Малюємо SVG картинку. Казуємо початкову точку і куда рухається курсор.
 doc.save()
     .moveTo(100, 150)
     .lineTo(100, 250)
     .lineTo(200, 250)
+    // вказуємо колір, яким замальовуємо фігуру
     .fill("#FF3300");
 
 // Apply some transforms and render an SVG path with the 'even-odd' fill rule
@@ -60,6 +65,18 @@ doc.addPage()
     .text('Here is a link!', 100, 100)
     .underline(100, 100, 160, 27, {color: "#0000FF"})
     .link(100, 100, 160, 27, 'http://google.com/');
+
+doc.addPage()
+    .fontSize(15)
+    .text(lorem, {
+
+        columns: 2,
+        // Відстань між колонками
+        columnGap: 30,
+        // Ширина колонки
+        width: 500,
+        align: 'justify'
+    });
 
 // Finalize PDF file
 doc.end();
