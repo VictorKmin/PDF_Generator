@@ -69,7 +69,7 @@ doc.addPage()
 doc.addPage()
     .fontSize(15)
     .text(lorem, {
-
+        // кількість колонок
         columns: 2,
         // Відстань між колонками
         columnGap: 30,
