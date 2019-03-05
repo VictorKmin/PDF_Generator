@@ -78,5 +78,5 @@ doc.addPage()
         align: 'justify'
     });
 
-// Finalize PDF file
+//Створюємо PDF
 doc.end();
