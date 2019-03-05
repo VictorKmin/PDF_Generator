@@ -59,10 +59,11 @@ doc.scale(0.6)
     .fill('red', 'even-odd')
     .restore();
 
-// Add some text with annotations
+// Створюємо ссилку
 doc.addPage()
     .fillColor("blue")
     .text('Here is a link!', 100, 100)
+    // нижнє підкреслювання
     .underline(100, 100, 160, 27, {color: "#0000FF"})
     .link(100, 100, 160, 27, 'http://google.com/');
 
